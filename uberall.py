@@ -7,8 +7,6 @@ from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 import time
-import json
-
 
 class Uberall:
 
@@ -37,11 +35,12 @@ class Uberall:
 
     def make_call(self, query):
         # Setting up Dowloading Directory and Chrome Options
-        chromedriver = "C:\\Users\\c\\anaconda3\\chromedriver.exe"
-        options = Options()
-        options.add_argument('--headless')
-        options.add_argument('--disable-gpu')
-        browser = webdriver.Chrome(chromedriver, chrome_options=options)
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
         try:
             # parsing the query into variables
             lst = query.split('-')
