@@ -3,7 +3,7 @@ from uberall import Uberall
 
 app = FastAPI()
 
-uberall = Uberall()
+
 
 
 @app.get("/")
@@ -13,4 +13,5 @@ async def home():
 
 @app.get("/{query}")
 async def get_results(query):
+    uberall = Uberall()
     return uberall.make_call(query)
