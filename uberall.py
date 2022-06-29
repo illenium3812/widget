@@ -10,6 +10,14 @@ import time
 import os
 
 class Uberall:
+    def __init__(self):
+        # Setting up Dowloading Directory and Chrome Options
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        self.browser = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
 
     def get_results(self, results):
         search_results = {}
@@ -35,13 +43,8 @@ class Uberall:
         return search_results
 
     def make_call(self, query):
-        # Setting up Dowloading Directory and Chrome Options
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--no-sandbox")
-        browser = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
+        BaseUrl = "https://uberall.com/en/developers/statusCheckWidget"
+        self.browser.get(BaseUrl)
         try:
             # parsing the query into variables
             lst = query.split('-')
@@ -53,36 +56,34 @@ class Uberall:
             return "There is an issue with the query"
 
         # Opening up the website
-        BaseUrl = "https://uberall.com/en/developers/statusCheckWidget"
-        browser.get(BaseUrl)
-        WebDriverWait(browser, 30).until(
+        WebDriverWait(self.browser, 30).until(
             EC.presence_of_element_located((By.CLASS_NAME, 'Select-control')))
-        browser.find_element_by_xpath(
+        self.browser.find_element_by_xpath(
             "//div[@class='Select-control']").find_element_by_css_selector('input').send_keys(Country)
-        browser.find_element_by_class_name('Select-menu-outer').click()
-        browser.find_element_by_xpath(
+        self.browser.find_element_by_class_name('Select-menu-outer').click()
+        self.browser.find_element_by_xpath(
             '//*[@id="widget-preview-box"]/div/div/div[1]/span/div/div/form/div[2]/input').send_keys(Company_name)
-        browser.find_element_by_xpath(
+        self.browser.find_element_by_xpath(
             '//*[@id="widget-preview-box"]/div/div/div[1]/span/div/div/form/div[3]/input').send_keys(Street_Number)
-        browser.find_element_by_xpath(
+        self.browser.find_element_by_xpath(
             '//*[@id="widget-preview-box"]/div/div/div[1]/span/div/div/form/div[4]/input').send_keys(ZIP)
-        browser.find_element_by_xpath('//input[@value="CHECK NOW"]').click()
+        self.browser.find_element_by_xpath('//input[@value="CHECK NOW"]').click()
         try:
             time.sleep(3)
-            map_inputs = browser.find_elements_by_class_name(
+            map_inputs = self.browser.find_elements_by_class_name(
                 'normalization-map-input')
             map_inputs[0].clear()
             map_inputs[0].send_keys(Street_Number)
             map_inputs[1].clear()
             map_inputs[1].send_keys(Street_Number)
-            browser.find_element_by_class_name(
+            self.browser.find_element_by_class_name(
                 'normalization-map-button').click()
         except Exception as e:
             pass
-        WebDriverWait(browser, 60).until(EC.presence_of_element_located(
+        WebDriverWait(self.browser, 60).until(EC.presence_of_element_located(
             (By.CLASS_NAME, 'ubsc_results-table-wrapper')))
         time.sleep(3)
-        results = browser.find_elements_by_class_name(
+        results = self.browser.find_elements_by_class_name(
             "ubsc_result-listing-row")
         search_results = self.get_results(results)
         return search_results
