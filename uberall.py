@@ -12,7 +12,13 @@ import os
 class Uberall:
     # Setting up Dowloading Directory and Chrome Options
     def __init__(self):
-        self.browser = None
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        self.browser = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
+        self.browser.get("https://uberall.com/en/developers/statusCheckWidget")
    
     
     def get_results(self, results):
@@ -39,15 +45,6 @@ class Uberall:
         return search_results
 
  def make_call(self, query):
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-
-    self.browser = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
-    self.browser.get("https://uberall.com/en/developers/statusCheckWidget")
-    
         try:
             # parsing the query into variables
             lst = query.split('-')
