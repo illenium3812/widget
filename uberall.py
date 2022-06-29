@@ -18,6 +18,7 @@ class Uberall:
         chrome_options.add_argument('--headless')
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument("--disable-dev-shm-usage")
         self.browser = webdriver.Chrome(executable_path=os.environ.get(
             "CHROMEDRIVER_PATH"), options=chrome_options)
         self.browser.get("https://uberall.com/en/developers/statusCheckWidget")
