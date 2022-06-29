@@ -3,12 +3,11 @@ from uberall import Uberall
 
 app = FastAPI()
 
-
+uberall = Uberall()
 
 
 @app.get("/")
 async def home():
-    uberall = Uberall()
     return "Waiting for the query"
 
 
