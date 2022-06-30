@@ -37,16 +37,7 @@ def get_results(results):
 
 app = FastAPI()
 # Setting up Dowloading Directory and Chrome Options
-chrome_options = webdriver.ChromeOptions()
-chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--disable-dev-shm-usage")
 
-browser = webdriver.Chrome(executable_path=os.environ.get(
-    "CHROMEDRIVER_PATH"), options=chrome_options)
-BaseUrl = "https://uberall.com/en/developers/statusCheckWidget"
-browser.get(BaseUrl)
 
 
 @app.get("/")
@@ -56,6 +47,16 @@ async def home():
 
 @app.get("/{query}")
 async def fetch_data(query):
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+
+    browser = webdriver.Chrome(executable_path=os.environ.get(
+        "CHROMEDRIVER_PATH"), options=chrome_options)
+    BaseUrl = "https://uberall.com/en/developers/statusCheckWidget"
+    browser.get(BaseUrl)
 
     try:
         # parsing the query into variables
